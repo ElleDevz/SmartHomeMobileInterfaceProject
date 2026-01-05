@@ -63,6 +63,125 @@ class IndependentMusicPlayer {
   }
 
   /**
+   * Generate synthesized audio using Web Audio API to avoid CORS issues
+   * Creates an OscillatorNode and records the output as a Blob
+   * @param {number} frequency - Frequency in Hz
+   * @param {number} duration - Duration in seconds
+   * @returns {Promise<string>} Data URL of generated audio
+   */
+  async generateSynthesizedAudio(frequency = 440, duration = 3) {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const sampleRate = audioContext.sampleRate;
+      
+      // Create offline context to render the audio
+      const offlineContext = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(
+        1, 
+        sampleRate * duration, 
+        sampleRate
+      );
+      
+      // Create oscillator
+      const oscillator = offlineContext.createOscillator();
+      const gainNode = offlineContext.createGain();
+      
+      oscillator.frequency.value = frequency;
+      oscillator.type = 'sine';
+      
+      // Create envelope (fade in/out)
+      gainNode.gain.setValueAtTime(0, 0);
+      gainNode.gain.linearRampToValueAtTime(0.3, 0.1);
+      gainNode.gain.linearRampToValueAtTime(0.3, duration - 0.1);
+      gainNode.gain.linearRampToValueAtTime(0, duration);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(offlineContext.destination);
+      oscillator.start(0);
+      oscillator.stop(duration);
+      
+      // Render the offline context
+      const renderedBuffer = await offlineContext.startRendering();
+      
+      // Convert AudioBuffer to WAV Blob
+      const wavBlob = this.audioBufferToWav(renderedBuffer);
+      return URL.createObjectURL(wavBlob);
+    } catch (error) {
+      console.error('[Audio] Error generating synthesized audio:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Convert AudioBuffer to WAV Blob
+   * @param {AudioBuffer} audioBuffer - The audio buffer to convert
+   * @returns {Blob} WAV file as blob
+   */
+  audioBufferToWav(audioBuffer) {
+    const numChannels = audioBuffer.numberOfChannels;
+    const sampleRate = audioBuffer.sampleRate;
+    const format = 1; // PCM
+    const bitDepth = 16;
+    
+    const bytesPerSample = bitDepth / 8;
+    const blockAlign = numChannels * bytesPerSample;
+    
+    const channels = [];
+    for (let i = 0; i < numChannels; i++) {
+      channels.push(audioBuffer.getChannelData(i));
+    }
+    
+    const length = audioBuffer.length * numChannels * bytesPerSample + 36;
+    const arrayBuffer = new ArrayBuffer(length + 8);
+    const view = new DataView(arrayBuffer);
+    
+    // RIFF identifier
+    let offset = 0;
+    const setUint32 = (data) => {
+      view.setUint32(offset, data, true);
+      offset += 4;
+    };
+    const setUint16 = (data) => {
+      view.setUint16(offset, data, true);
+      offset += 2;
+    };
+    const setUint8 = (data) => {
+      view.setUint8(offset, data);
+      offset += 1;
+    };
+    
+    // RIFF header
+    setUint32(0x46464952); // "RIFF"
+    setUint32(length);
+    setUint32(0x45564157); // "WAVE"
+    
+    // fmt sub-chunk
+    setUint32(0x20746d66); // "fmt "
+    setUint32(16); // sub-chunk size
+    setUint16(format);
+    setUint16(numChannels);
+    setUint32(sampleRate);
+    setUint32(sampleRate * blockAlign);
+    setUint16(blockAlign);
+    setUint16(bitDepth);
+    
+    // data sub-chunk
+    setUint32(0x61746164); // "data"
+    setUint32(audioBuffer.length * numChannels * bytesPerSample);
+    
+    // Interleave channels and write samples
+    const volume = 0.8;
+    let index = 0;
+    const samples = new Int16Array(arrayBuffer, offset);
+    for (let i = 0; i < audioBuffer.length; i++) {
+      for (let j = 0; j < numChannels; j++) {
+        samples[index++] = channels[j][i] < 0 ? channels[j][i] * 0x8000 : channels[j][i] * 0x7fff;
+      }
+    }
+    
+    return new Blob([arrayBuffer], { type: 'audio/wav' });
+  }
+
+  /**
    * Search for independent/Creative Commons music
    * @param {string} query - Search term (artist, genre, mood)
    * @returns {Promise<Array>} Array of tracks
@@ -151,43 +270,51 @@ class IndependentMusicPlayer {
    * Get demo/example tracks (no API key needed)
    * @private
    */
-  getDemoTracks() {
+  async getDemoTracks() {
+    // Generate synthesized tracks that work everywhere without CORS issues
+    const track1Url = await this.generateSynthesizedAudio(440, 5); // A4, 5 seconds
+    const track2Url = await this.generateSynthesizedAudio(554.37, 5); // C#5, 5 seconds
+    const track3Url = await this.generateSynthesizedAudio(329.63, 5); // E4, 5 seconds
+    
     return [
       {
         id: 'demo-1',
-        title: 'Sunny Day',
-        artist: 'Bensound',
-        genre: 'Upbeat',
-        duration: 120,
+        title: 'Upbeat Synth',
+        artist: 'Generated',
+        genre: 'Electronic',
+        duration: 5,
         artwork: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop',
-        url: 'https://www.bensound.com/bensound-music/bensound-sunny.mp3',
-        source: 'Bensound',
-        license: 'CC-BY 3.0',
-        attribution: 'Sunny by Bensound',
+        url: track1Url,
+        isSynthesized: true,
+        source: 'Generated',
+        license: 'Original',
+        attribution: 'HomeHarmony App',
       },
       {
         id: 'demo-2',
-        title: 'Ukulele Happy',
-        artist: 'Bensound',
-        genre: 'Upbeat',
-        duration: 120,
+        title: 'Happy Melody',
+        artist: 'Generated',
+        genre: 'Electronic',
+        duration: 5,
         artwork: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop',
-        url: 'https://www.bensound.com/bensound-music/bensound-ukulele.mp3',
-        source: 'Bensound',
-        license: 'CC-BY 3.0',
-        attribution: 'Ukulele by Bensound',
+        url: track2Url,
+        isSynthesized: true,
+        source: 'Generated',
+        license: 'Original',
+        attribution: 'HomeHarmony App',
       },
       {
         id: 'demo-3',
-        title: 'Relaxing Ambient',
-        artist: 'Bensound',
+        title: 'Peaceful Tone',
+        artist: 'Generated',
         genre: 'Ambient',
-        duration: 120,
+        duration: 5,
         artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop',
-        url: 'https://www.bensound.com/bensound-music/bensound-relaxing.mp3',
-        source: 'Bensound',
-        license: 'CC-BY 3.0',
-        attribution: 'Relaxing by Bensound',
+        url: track3Url,
+        isSynthesized: true,
+        source: 'Generated',
+        license: 'Original',
+        attribution: 'HomeHarmony App',
       },
     ];
   }

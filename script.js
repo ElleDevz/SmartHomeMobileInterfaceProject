@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Independent Music Player
     state.independentPlayer = new IndependentMusicPlayer();
     await state.independentPlayer.initialize();
-    const demoTracks = state.independentPlayer.getDemoTracks();
+    const demoTracks = await state.independentPlayer.getDemoTracks();
     state.independentPlayer.setPlaylist(demoTracks);
     console.log('Independent Music Player initialized with', demoTracks.length, 'tracks');
     
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     await state.independentPlayer.initialize();
                     
                     // Load demo tracks
-                    const demoTracks = state.independentPlayer.getDemoTracks();
+                    const demoTracks = await state.independentPlayer.getDemoTracks();
                     state.independentPlayer.setPlaylist(demoTracks);
                     console.log('Independent Music Player initialized with demo tracks');
                 }
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     console.log('[handlePlayPause] Initializing new player');
                     state.independentPlayer = new IndependentMusicPlayer();
                     await state.independentPlayer.initialize();
-                    const demoTracks = state.independentPlayer.getDemoTracks();
+                    const demoTracks = await state.independentPlayer.getDemoTracks();
                     state.independentPlayer.setPlaylist(demoTracks);
                     console.log('Independent player initialized with', demoTracks.length, 'tracks');
                 }
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!state.independentPlayer) {
                     state.independentPlayer = new IndependentMusicPlayer();
                     await state.independentPlayer.initialize();
-                    const demoTracks = state.independentPlayer.getDemoTracks();
+                    const demoTracks = await state.independentPlayer.getDemoTracks();
                     state.independentPlayer.setPlaylist(demoTracks);
                 }
                 
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!state.independentPlayer) {
                     state.independentPlayer = new IndependentMusicPlayer();
                     await state.independentPlayer.initialize();
-                    const demoTracks = state.independentPlayer.getDemoTracks();
+                    const demoTracks = await state.independentPlayer.getDemoTracks();
                     state.independentPlayer.setPlaylist(demoTracks);
                 }
                 
@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!state.independentPlayer) {
         state.independentPlayer = new IndependentMusicPlayer();
         await state.independentPlayer.initialize();
-        const demoTracks = state.independentPlayer.getDemoTracks();
+        const demoTracks = await state.independentPlayer.getDemoTracks();
         state.independentPlayer.setPlaylist(demoTracks);
         console.log('Independent Music Player initialized on startup');
         elements.songName.textContent = 'Ready to play';
