@@ -151,6 +151,9 @@ class IndependentMusicPlayer {
    * @private
    */
   getDemoTracks() {
+    // Use dynamic base path - resolves to /SmartHomeMobileInterfaceProject/ on GitHub Pages
+    const basePath = import.meta.env.BASE_URL || '/SmartHomeMobileInterfaceProject/';
+    
     return [
       {
         id: 'demo-1',
@@ -159,7 +162,7 @@ class IndependentMusicPlayer {
         genre: 'Indie Pop',
         duration: 169,
         artwork: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop',
-        url: '/audio/track1.mp3',
+        url: `${basePath}audio/track1.mp3`,
         source: 'Bensound',
         license: 'CC-BY 3.0',
         attribution: 'Bensound.com',
@@ -171,7 +174,7 @@ class IndependentMusicPlayer {
         genre: 'Indie Pop',
         duration: 123,
         artwork: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop',
-        url: '/audio/track2.mp3',
+        url: `${basePath}audio/track2.mp3`,
         source: 'Bensound',
         license: 'CC-BY 3.0',
         attribution: 'Bensound.com',
@@ -183,7 +186,7 @@ class IndependentMusicPlayer {
         genre: 'Chillout',
         duration: 274,
         artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop',
-        url: '/audio/track3.mp3',
+        url: `${basePath}audio/track3.mp3`,
         source: 'Bensound',
         license: 'CC-BY 3.0',
         attribution: 'Bensound.com',
