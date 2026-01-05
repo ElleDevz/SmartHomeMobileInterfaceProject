@@ -46,6 +46,18 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    // Skip audio/media files - let them go directly to network for CORS
+    if (event.request.url.includes('.mp3') || 
+        event.request.url.includes('.wav') ||
+        event.request.url.includes('.ogg') ||
+        event.request.url.includes('.flac') ||
+        event.request.url.includes('.m4a') ||
+        event.request.url.includes('bensound.com') ||
+        event.request.url.includes('pixabay.com')) {
+        // Let media requests bypass the service worker
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then((response) => {
             // Return cached response if found

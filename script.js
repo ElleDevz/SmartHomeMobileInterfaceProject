@@ -5,6 +5,20 @@
 import { IndependentMusicPlayer } from './independent-music-player.js';
 
 // ========================================
+// SERVICE WORKER CLEANUP
+// ========================================
+
+// Unregister old service workers that might be blocking CORS requests
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+            console.log('[SW] Unregistering old service worker');
+            registration.unregister();
+        });
+    });
+}
+
+// ========================================
 // STATE MANAGEMENT
 // ========================================
 
