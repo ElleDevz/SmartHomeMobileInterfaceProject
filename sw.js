@@ -1,5 +1,5 @@
 // Service Worker for HomeHarmony PWA
-const CACHE_NAME = 'homeharmony-v2';
+const CACHE_NAME = 'homeharmony-v3';
 const ASSETS = [
     '/',
     '/index.html',
