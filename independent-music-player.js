@@ -221,7 +221,9 @@ class IndependentMusicPlayer {
         console.log('[IndependentMusicPlayer.play] No track provided, checking current track');
         if (this.currentTrack) {
           console.log('[IndependentMusicPlayer.play] Resuming current track:', this.currentTrack.title);
-          this.audioElement.play();
+          await this.audioElement.play();
+          this.isPlaying = true;
+          this.emit('onPlayStateChange', { isPlaying: true });
           return true;
         } else if (this.playlist.length > 0) {
           console.log('[IndependentMusicPlayer.play] No current track, using first from playlist');
@@ -249,7 +251,10 @@ class IndependentMusicPlayer {
       console.log('[IndependentMusicPlayer.play] Calling audioElement.play()');
       await this.audioElement.play();
       console.log('[IndependentMusicPlayer.play] Play call succeeded');
-
+      
+      // Set isPlaying immediately instead of waiting for play event
+      this.isPlaying = true;
+      this.emit('onPlayStateChange', { isPlaying: true });
       this.emit('onTrackChange', { track });
       return true;
     } catch (error) {
