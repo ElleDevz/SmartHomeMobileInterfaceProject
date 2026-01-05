@@ -356,9 +356,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ========================================
     
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(registration => console.log('Service Worker registered'))
-            .catch(error => console.log('Service Worker registration failed:', error));
+        // First unregister any old service workers
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => {
+                console.log('[SW] Unregistering old service worker');
+                registration.unregister();
+            });
+            
+            // Wait a moment for unregistration, then register fresh
+            setTimeout(() => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered (fresh)');
+                        // Force the new service worker to activate immediately
+                        if (registration.waiting) {
+                            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                        }
+                    })
+                    .catch(error => console.log('Service Worker registration failed:', error));
+            }, 500);
+        });
     }
     
     console.log('HomeHarmony initialized');

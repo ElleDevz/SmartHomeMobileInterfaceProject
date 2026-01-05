@@ -12,6 +12,7 @@ const ASSETS = [
 
 // Install event - cache assets
 self.addEventListener('install', (event) => {
+    console.log('[SW] Installing service worker');
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             return cache.addAll(ASSETS).catch((err) => {
@@ -21,6 +22,14 @@ self.addEventListener('install', (event) => {
         })
     );
     self.skipWaiting();
+});
+
+// Message event - handle SKIP_WAITING message
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        console.log('[SW] Received SKIP_WAITING message, activating immediately');
+        self.skipWaiting();
+    }
 });
 
 // Activate event - clean up old caches
