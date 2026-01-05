@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 if (songDisplayElement) songDisplayElement.style.display = 'flex';
             } else {
-                elements.songName.textContent = 'Press Play to Get Groovy!';
-                elements.songAlbum.textContent = 'Independent Artists';
+                elements.songName.textContent = 'Tap to Set the Mood';
+                elements.songAlbum.textContent = 'Select a track';
                 elements.songImage.innerHTML = '<i class="fas fa-music"></i>';
                 if (songDisplayElement) songDisplayElement.style.display = 'flex';
             }

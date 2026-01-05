@@ -62,7 +62,8 @@ self.addEventListener('fetch', (event) => {
         event.request.url.includes('.flac') ||
         event.request.url.includes('.m4a') ||
         event.request.url.includes('bensound.com') ||
-        event.request.url.includes('pixabay.com')) {
+        event.request.url.includes('pixabay.com') ||
+        event.request.url.includes('/audio/')) {
         // Let media requests bypass the service worker
         console.log('[SW] Bypassing SW for media request:', event.request.url);
         return;
