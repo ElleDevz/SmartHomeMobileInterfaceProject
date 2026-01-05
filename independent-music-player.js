@@ -32,6 +32,7 @@ class IndependentMusicPlayer {
   async initialize() {
     console.log('[IndependentMusicPlayer] Initializing...');
     this.audioElement = new Audio();
+    this.audioElement.crossOrigin = 'anonymous';
     
     this.audioElement.addEventListener('loadstart', () => {
       console.log('[Audio] Loading started');
