@@ -1,8 +1,9 @@
 // ========================================
-// SPOTIFY INTEGRATION
+// IMPORTS
 // ========================================
 
 import { spotifyPlayer } from './spotify-player.js';
+import { IndependentMusicPlayer } from './independent-music-player.js';
 
 // ========================================
 // STATE MANAGEMENT

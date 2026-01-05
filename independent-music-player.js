@@ -445,7 +445,10 @@ class IndependentMusicPlayer {
   }
 }
 
-// Export for use in other modules
+// ES6 Export
+export { IndependentMusicPlayer };
+
+// CommonJS Export
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = IndependentMusicPlayer;
 }
