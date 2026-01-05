@@ -13,6 +13,7 @@ class IndependentMusicPlayer {
     this.isPlaying = false;
     this.playlist = [];
     this.currentIndex = 0;
+    this.basePath = '/SmartHomeMobileInterfaceProject/'; // Default fallback
     this.apiKeys = {
       pixabay: 'YOUR_PIXABAY_API_KEY_HERE',
       // Freepik is optional - uses web scraping fallback
@@ -151,9 +152,6 @@ class IndependentMusicPlayer {
    * @private
    */
   getDemoTracks() {
-    // Use dynamic base path - resolves to /SmartHomeMobileInterfaceProject/ on GitHub Pages
-    const basePath = import.meta.env.BASE_URL || '/SmartHomeMobileInterfaceProject/';
-    
     return [
       {
         id: 'demo-1',
@@ -162,7 +160,7 @@ class IndependentMusicPlayer {
         genre: 'Indie Pop',
         duration: 169,
         artwork: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop',
-        url: `${basePath}audio/track1.mp3`,
+        url: `${this.basePath}audio/track1.mp3`,
         source: 'Bensound',
         license: 'CC-BY 3.0',
         attribution: 'Bensound.com',
@@ -174,7 +172,7 @@ class IndependentMusicPlayer {
         genre: 'Indie Pop',
         duration: 123,
         artwork: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop',
-        url: `${basePath}audio/track2.mp3`,
+        url: `${this.basePath}audio/track2.mp3`,
         source: 'Bensound',
         license: 'CC-BY 3.0',
         attribution: 'Bensound.com',
@@ -186,7 +184,7 @@ class IndependentMusicPlayer {
         genre: 'Chillout',
         duration: 274,
         artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop',
-        url: `${basePath}audio/track3.mp3`,
+        url: `${this.basePath}audio/track3.mp3`,
         source: 'Bensound',
         license: 'CC-BY 3.0',
         attribution: 'Bensound.com',
