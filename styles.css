@@ -534,59 +534,6 @@ input:checked + .slider:before {
 }
 
 /* ========================================
-   MUSIC SERVICE SELECTOR
-   ======================================== */
-
-.music-service-selector-inline {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 0.5rem 0;
-    padding: 1rem;
-    background: var(--bg-tertiary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-light);
-    width: 100%;
-}
-
-.music-service-selector-inline label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    white-space: nowrap;
-    margin: 0;
-}
-
-.music-service-select {
-    padding: 0.625rem 1rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    flex: 1;
-}
-
-.music-service-select:hover {
-    border-color: var(--primary-color);
-    background: var(--bg-secondary);
-}
-
-.music-service-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.music-service-select option {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-}
-
-/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 

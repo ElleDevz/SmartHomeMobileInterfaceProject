@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         songName: document.getElementById('songName'),
         songAlbum: document.getElementById('songAlbum'),
         songImage: document.getElementById('songImage'),
-        musicServiceSelect: document.getElementById('musicServiceSelect'),
     };
     
     // ========================================
@@ -165,16 +164,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.temperature--;
         updateTemperatureDisplay();
         console.log(`Temperature decreased to ${state.temperature}°F`);
-    });
-    
-    // ========================================
-    // EVENT LISTENERS - MUSIC SERVICE SELECTOR
-    // ========================================
-    
-    elements.musicServiceSelect?.addEventListener('change', async (e) => {
-        const selectedService = e.target.value;
-        console.log(`Switching to ${selectedService} service...`);
-        await switchMusicService(selectedService);
     });
     
     // ========================================
