@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
 
+# Automatically deploy to GitHub Pages on push to main branch
 on:
   push:
     branches: [main]
