@@ -34,28 +34,22 @@ class IndependentMusicPlayer {
     this.audioElement = new Audio();
     this.audioElement.crossOrigin = 'anonymous';
     
-    this.audioElement.addEventListener('loadstart', () => {
-      console.log('[Audio] Loading started');
-    });
-    
     this.audioElement.addEventListener('canplay', () => {
-      console.log('[Audio] Can play - audio loaded successfully');
+      console.log('[Audio] Ready to play');
     });
     
     this.audioElement.addEventListener('play', () => {
-      console.log('[Audio] Play event fired');
       this.isPlaying = true;
       this.emit('onPlayStateChange', { isPlaying: true });
     });
     
     this.audioElement.addEventListener('pause', () => {
-      console.log('[Audio] Pause event fired');
       this.isPlaying = false;
       this.emit('onPlayStateChange', { isPlaying: false });
     });
     
     this.audioElement.addEventListener('ended', () => {
-      console.log('[Audio] Track ended, going to next');
+      console.log('[Audio] Track ended, playing next');
       this.nextTrack();
     });
     
@@ -214,19 +208,14 @@ class IndependentMusicPlayer {
    */
   async play(track) {
     try {
-      console.log('[IndependentMusicPlayer.play] Called with track:', track);
-      
       // If no track provided, resume current track
       if (!track) {
-        console.log('[IndependentMusicPlayer.play] No track provided, checking current track');
         if (this.currentTrack) {
-          console.log('[IndependentMusicPlayer.play] Resuming current track:', this.currentTrack.title);
           await this.audioElement.play();
           this.isPlaying = true;
           this.emit('onPlayStateChange', { isPlaying: true });
           return true;
         } else if (this.playlist.length > 0) {
-          console.log('[IndependentMusicPlayer.play] No current track, using first from playlist');
           track = this.playlist[0];
         } else {
           throw new Error('No tracks available to play');
@@ -234,28 +223,16 @@ class IndependentMusicPlayer {
       }
       
       if (typeof track === 'string') {
-        // If just an ID, find it in playlist
-        console.log('[IndependentMusicPlayer.play] Track is string ID, finding in playlist');
         const foundTrack = this.playlist.find((t) => t.id === track);
         if (!foundTrack) throw new Error('Track not found');
         track = foundTrack;
       }
 
-      console.log('[IndependentMusicPlayer.play] Setting up audio for:', track.title);
       this.currentTrack = track;
       this.currentIndex = this.playlist.findIndex((t) => t.id === track.id);
-
-      console.log('[IndependentMusicPlayer.play] Audio URL:', track.url);
-      console.log('[IndependentMusicPlayer.play] Audio element crossOrigin:', this.audioElement.crossOrigin);
       this.audioElement.src = track.url;
-      console.log('[IndependentMusicPlayer.play] Audio src set to:', this.audioElement.src);
       
-      console.log('[IndependentMusicPlayer.play] Calling audioElement.play()');
-      const playPromise = this.audioElement.play();
-      console.log('[IndependentMusicPlayer.play] Play promise:', playPromise);
-      
-      await playPromise;
-      console.log('[IndependentMusicPlayer.play] Play call succeeded');
+      await this.audioElement.play();
       
       // Set isPlaying immediately instead of waiting for play event
       this.isPlaying = true;
@@ -263,9 +240,7 @@ class IndependentMusicPlayer {
       this.emit('onTrackChange', { track });
       return true;
     } catch (error) {
-      console.error('[IndependentMusicPlayer.play] ERROR:', error);
-      console.error('[IndependentMusicPlayer.play] Error name:', error.name);
-      console.error('[IndependentMusicPlayer.play] Error message:', error.message);
+      console.error('[Audio] Playback error:', error.message);
       this.emit('onError', { message: 'Failed to play track', error });
       return false;
     }
