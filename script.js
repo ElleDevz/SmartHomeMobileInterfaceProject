@@ -200,8 +200,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function handlePlayPause() {
         try {
+            console.log('[handlePlayPause] Called, currentService:', state.currentService);
+            console.log('[handlePlayPause] independentPlayer exists:', !!state.independentPlayer);
+            console.log('[handlePlayPause] isPlaying:', state.independentPlayer?.isPlaying);
+            
             if (state.currentService === 'independent') {
                 if (!state.independentPlayer) {
+                    console.log('[handlePlayPause] Initializing new player');
                     state.independentPlayer = new IndependentMusicPlayer();
                     await state.independentPlayer.initialize();
                     const demoTracks = state.independentPlayer.getDemoTracks();
@@ -210,15 +215,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 if (state.independentPlayer.isPlaying) {
+                    console.log('[handlePlayPause] Pausing music');
                     await state.independentPlayer.pause();
                     console.log('Music paused');
                 } else {
                     // Always pass the first track if no current track
                     if (!state.independentPlayer.currentTrack) {
                         const firstTrack = state.independentPlayer.playlist[0];
+                        console.log('[handlePlayPause] Playing first track:', firstTrack.title, 'URL:', firstTrack.url);
                         await state.independentPlayer.play(firstTrack);
                         console.log('Playing first track:', firstTrack.title);
                     } else {
+                        console.log('[handlePlayPause] Resuming current track:', state.independentPlayer.currentTrack.title);
                         await state.independentPlayer.play();
                         console.log('Resuming playback');
                     }

@@ -265,6 +265,8 @@ class IndependentMusicPlayer {
   pause() {
     if (this.audioElement) {
       this.audioElement.pause();
+      this.isPlaying = false;
+      this.emit('onPlayStateChange', { isPlaying: false });
     }
   }
 
