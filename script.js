@@ -270,14 +270,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     state.independentPlayer.setPlaylist(demoTracks);
                 }
                 
-                // Ensure we're playing before skipping to next
-                if (!state.independentPlayer.isPlaying && state.independentPlayer.playlist.length > 0) {
-                    await state.independentPlayer.play(state.independentPlayer.playlist[0]);
-                }
+                console.log('[handleNextTrack] Current index:', state.independentPlayer.currentIndex, 'Playlist length:', state.independentPlayer.playlist.length);
+                console.log('[handleNextTrack] Is playing:', state.independentPlayer.isPlaying);
                 
-                await state.independentPlayer.nextTrack();
+                // Always skip to next track and start playing
+                state.independentPlayer.nextTrack();
+                
+                console.log('[handleNextTrack] New index:', state.independentPlayer.currentIndex);
             }
             
+            updateNowPlaying();
             await refreshPlaybackState();
         } catch (error) {
             console.error('Next track error:', error);
@@ -294,14 +296,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     state.independentPlayer.setPlaylist(demoTracks);
                 }
                 
-                // Ensure we're playing before skipping to previous
-                if (!state.independentPlayer.isPlaying && state.independentPlayer.playlist.length > 0) {
-                    await state.independentPlayer.play(state.independentPlayer.playlist[0]);
-                }
+                console.log('[handlePreviousTrack] Current index:', state.independentPlayer.currentIndex, 'Playlist length:', state.independentPlayer.playlist.length);
+                console.log('[handlePreviousTrack] Is playing:', state.independentPlayer.isPlaying);
                 
-                await state.independentPlayer.previousTrack();
+                // Always skip to previous track and start playing
+                state.independentPlayer.previousTrack();
+                
+                console.log('[handlePreviousTrack] New index:', state.independentPlayer.currentIndex);
             }
             
+            updateNowPlaying();
             await refreshPlaybackState();
         } catch (error) {
             console.error('Previous track error:', error);

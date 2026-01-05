@@ -282,21 +282,21 @@ class IndependentMusicPlayer {
   /**
    * Play next track in playlist
    */
-  nextTrack() {
+  async nextTrack() {
     if (this.playlist.length === 0) return;
 
     this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
-    this.play(this.playlist[this.currentIndex]);
+    await this.play(this.playlist[this.currentIndex]);
   }
 
   /**
    * Play previous track in playlist
    */
-  previousTrack() {
+  async previousTrack() {
     if (this.playlist.length === 0) return;
 
     this.currentIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
-    this.play(this.playlist[this.currentIndex]);
+    await this.play(this.playlist[this.currentIndex]);
   }
 
   /**
