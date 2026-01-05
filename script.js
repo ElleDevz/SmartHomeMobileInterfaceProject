@@ -13,7 +13,6 @@ const state = {
     isLighting: false,
     lightDimmer: 100,
     isPlaying: false,
-    spotifyEnabled: false,
     currentService: 'independent',
     independentPlayer: null,
 };
@@ -56,26 +55,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.lightingStatus.textContent = state.isLighting ? 'On' : 'Off';
     };
 
-    const updateSpotifyStatus = () => {
-        const isAuth = spotifyPlayer.isAuthenticated;
-        state.spotifyEnabled = isAuth;
-    };
-
     const updateNowPlaying = () => {
         const songDisplayElement = document.querySelector('.song-display');
         
-        if (state.currentService === 'spotify') {
-            const trackInfo = spotifyPlayer.getCurrentTrackInfo();
-            elements.songName.textContent = trackInfo.name || 'Not Playing';
-            elements.songAlbum.textContent = trackInfo.album || 'Spotify';
-            
-            if (trackInfo.imageUrl) {
-                elements.songImage.innerHTML = `<img src="${trackInfo.imageUrl}" alt="Album art">`;
-            } else {
-                elements.songImage.innerHTML = '<i class="fas fa-music"></i>';
-            }
-            if (songDisplayElement) songDisplayElement.style.display = 'flex';
-        } else if (state.currentService === 'independent' && state.independentPlayer) {
+        if (state.currentService === 'independent' && state.independentPlayer) {
             const track = state.independentPlayer.currentTrack;
             if (track) {
                 elements.songName.textContent = track.title || 'Unknown Track';
@@ -88,7 +71,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 if (songDisplayElement) songDisplayElement.style.display = 'flex';
             } else {
-                if (songDisplayElement) songDisplayElement.style.display = 'none';
+                elements.songName.textContent = 'Press Play to Get Groovy!';
+                elements.songAlbum.textContent = 'Independent Artists';
+                elements.songImage.innerHTML = '<i class="fas fa-music"></i>';
+                if (songDisplayElement) songDisplayElement.style.display = 'flex';
             }
         } else {
             if (songDisplayElement) songDisplayElement.style.display = 'none';
@@ -96,9 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Update play button
         let isPlaying = false;
-        if (state.currentService === 'spotify') {
-            isPlaying = spotifyPlayer.isPlaying;
-        } else if (state.currentService === 'independent' && state.independentPlayer) {
+        if (state.currentService === 'independent' && state.independentPlayer) {
             isPlaying = state.independentPlayer.isPlaying;
         }
         
@@ -111,9 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const refreshPlaybackState = async () => {
         try {
-            if (state.currentService === 'spotify' && state.spotifyEnabled) {
-                await spotifyPlayer.getPlaybackState();
-            } else if (state.currentService === 'independent' && state.independentPlayer) {
+            if (state.currentService === 'independent' && state.independentPlayer) {
                 // Independent player updates internally
             }
             
@@ -124,16 +106,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
     
     // ========================================
-    // INITIALIZE SPOTIFY AND STATUS
+    // INITIALIZE APP
     // ========================================
     
-    // Initialize Spotify
-    await spotifyPlayer.init();
-    updateSpotifyStatus();
+    // Initialize Independent Music Player
+    state.independentPlayer = new IndependentMusicPlayer();
+    await state.independentPlayer.initialize();
+    const demoTracks = state.independentPlayer.getDemoTracks();
+    state.independentPlayer.setPlaylist(demoTracks);
+    console.log('Independent Music Player initialized with', demoTracks.length, 'tracks');
     
     // Initialize displays
     updateTemperatureDisplay();
     updateLightingStatus();
+    updateNowPlaying();
     
     // ========================================
     // EVENT LISTENERS - LIGHTING
