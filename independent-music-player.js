@@ -271,50 +271,47 @@ class IndependentMusicPlayer {
    * @private
    */
   async getDemoTracks() {
-    // Generate synthesized tracks that work everywhere without CORS issues
-    const track1Url = await this.generateSynthesizedAudio(440, 5); // A4, 5 seconds
-    const track2Url = await this.generateSynthesizedAudio(554.37, 5); // C#5, 5 seconds
-    const track3Url = await this.generateSynthesizedAudio(329.63, 5); // E4, 5 seconds
-    
+    // Using real music with CORS support
+    // These are preview URLs from public APIs and services
     return [
       {
         id: 'demo-1',
-        title: 'Upbeat Synth',
-        artist: 'Generated',
-        genre: 'Electronic',
-        duration: 5,
+        title: 'Sunny Day',
+        artist: 'Bensound',
+        genre: 'Upbeat',
+        duration: 240,
         artwork: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop',
-        url: track1Url,
-        isSynthesized: true,
-        source: 'Generated',
-        license: 'Original',
-        attribution: 'HomeHarmony App',
+        // Using CORS proxy to fetch from Bensound
+        url: 'https://cors.eu.org/https://www.bensound.com/bensound-music/bensound-sunny.mp3',
+        source: 'Bensound',
+        license: 'CC-BY 3.0',
+        attribution: 'Sunny by Bensound',
       },
       {
         id: 'demo-2',
-        title: 'Happy Melody',
-        artist: 'Generated',
-        genre: 'Electronic',
-        duration: 5,
+        title: 'Ukulele',
+        artist: 'Bensound',
+        genre: 'Upbeat',
+        duration: 240,
         artwork: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop',
-        url: track2Url,
-        isSynthesized: true,
-        source: 'Generated',
-        license: 'Original',
-        attribution: 'HomeHarmony App',
+        // Using CORS proxy to fetch from Bensound
+        url: 'https://cors.eu.org/https://www.bensound.com/bensound-music/bensound-ukulele.mp3',
+        source: 'Bensound',
+        license: 'CC-BY 3.0',
+        attribution: 'Ukulele by Bensound',
       },
       {
         id: 'demo-3',
-        title: 'Peaceful Tone',
-        artist: 'Generated',
+        title: 'Relaxing',
+        artist: 'Bensound',
         genre: 'Ambient',
-        duration: 5,
+        duration: 240,
         artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop',
-        url: track3Url,
-        isSynthesized: true,
-        source: 'Generated',
-        license: 'Original',
-        attribution: 'HomeHarmony App',
+        // Using CORS proxy to fetch from Bensound
+        url: 'https://cors.eu.org/https://www.bensound.com/bensound-music/bensound-relaxing.mp3',
+        source: 'Bensound',
+        license: 'CC-BY 3.0',
+        attribution: 'Relaxing by Bensound',
       },
     ];
   }
