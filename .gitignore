@@ -12,9 +12,6 @@ node_modules/
 .env.local
 .env.*.local
 
-# Spotify Config (Don't commit your Client ID!)
-spotify-config.js
-
 # IDE
 .vscode/
 .idea/
