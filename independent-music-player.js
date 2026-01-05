@@ -161,38 +161,38 @@ class IndependentMusicPlayer {
       {
         id: 'demo-1',
         title: 'Summer Vibes',
-        artist: 'Coma-Media',
+        artist: 'Independent Artist',
         genre: 'Indie Pop',
-        duration: 180,
+        duration: 3,
         artwork: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop',
-        url: 'https://www.bensound.com/bensound-music/bensound-sunny.mp3',
-        source: 'Bensound',
-        license: 'CC-BY-NC-ND 3.0',
-        attribution: 'Sunny by Bensound',
+        url: '/SmartHomeMobileInterfaceProject/audio/track1.wav',
+        source: 'Local',
+        license: 'CC0',
+        attribution: 'Demo track',
       },
       {
         id: 'demo-2',
         title: 'Electronic Dreams',
-        artist: 'Bensound',
+        artist: 'Independent Artist',
         genre: 'Electronic',
-        duration: 200,
+        duration: 3,
         artwork: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop',
-        url: 'https://www.bensound.com/bensound-music/bensound-ukulele.mp3',
-        source: 'Bensound',
-        license: 'CC-BY-NC-ND 3.0',
-        attribution: 'Ukulele by Bensound',
+        url: '/SmartHomeMobileInterfaceProject/audio/track2.wav',
+        source: 'Local',
+        license: 'CC0',
+        attribution: 'Demo track',
       },
       {
         id: 'demo-3',
         title: 'Chill Jazz',
-        artist: 'Bensound',
+        artist: 'Independent Artist',
         genre: 'Jazz',
-        duration: 240,
+        duration: 3,
         artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop',
-        url: 'https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3',
-        source: 'Bensound',
-        license: 'CC-BY-NC-ND 3.0',
-        attribution: 'Jazzy Frenchy by Bensound',
+        url: '/SmartHomeMobileInterfaceProject/audio/track3.wav',
+        source: 'Local',
+        license: 'CC0',
+        attribution: 'Demo track',
       },
     ];
   }
@@ -246,10 +246,15 @@ class IndependentMusicPlayer {
       this.currentIndex = this.playlist.findIndex((t) => t.id === track.id);
 
       console.log('[IndependentMusicPlayer.play] Audio URL:', track.url);
+      console.log('[IndependentMusicPlayer.play] Audio element crossOrigin:', this.audioElement.crossOrigin);
       this.audioElement.src = track.url;
+      console.log('[IndependentMusicPlayer.play] Audio src set to:', this.audioElement.src);
       
       console.log('[IndependentMusicPlayer.play] Calling audioElement.play()');
-      await this.audioElement.play();
+      const playPromise = this.audioElement.play();
+      console.log('[IndependentMusicPlayer.play] Play promise:', playPromise);
+      
+      await playPromise;
       console.log('[IndependentMusicPlayer.play] Play call succeeded');
       
       // Set isPlaying immediately instead of waiting for play event
@@ -259,6 +264,8 @@ class IndependentMusicPlayer {
       return true;
     } catch (error) {
       console.error('[IndependentMusicPlayer.play] ERROR:', error);
+      console.error('[IndependentMusicPlayer.play] Error name:', error.name);
+      console.error('[IndependentMusicPlayer.play] Error message:', error.message);
       this.emit('onError', { message: 'Failed to play track', error });
       return false;
     }

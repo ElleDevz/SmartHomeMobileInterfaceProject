@@ -64,6 +64,7 @@ self.addEventListener('fetch', (event) => {
         event.request.url.includes('bensound.com') ||
         event.request.url.includes('pixabay.com')) {
         // Let media requests bypass the service worker
+        console.log('[SW] Bypassing SW for media request:', event.request.url);
         return;
     }
 
@@ -92,7 +93,8 @@ self.addEventListener('fetch', (event) => {
 
                     return response;
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.log('[SW] Fetch error for', event.request.url, error);
                     // Network request failed, try to return a cached response
                     return caches.match(event.request);
                 });
