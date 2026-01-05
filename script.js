@@ -2,7 +2,6 @@
 // IMPORTS
 // ========================================
 
-import { spotifyPlayer } from './spotify-player.js';
 import { IndependentMusicPlayer } from './independent-music-player.js';
 
 // ========================================
@@ -216,17 +215,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 elements.songName.textContent = 'Select a track';
                 elements.songAlbum.textContent = 'Independent Artists & Creative Commons';
                 console.log('Switched to Independent Artists service');
-                
-            } else if (service === 'spotify') {
-                // Spotify requires login
-                if (!state.spotifyEnabled) {
-                    console.log('Spotify selected - please login');
-                    elements.songName.textContent = 'Spotify Selected';
-                    elements.songAlbum.textContent = 'Click play to connect';
-                    await spotifyPlayer.login();
-                } else {
-                    console.log('Switched to Spotify');
-                }
             }
             
             await refreshPlaybackState();
@@ -263,23 +251,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 // Immediately update UI
                 updateNowPlaying();
-                
-            } else if (state.currentService === 'spotify') {
-                if (!state.spotifyEnabled) {
-                    console.log('Please login to Spotify first');
-                    elements.songName.textContent = 'Spotify Login Required';
-                    elements.songAlbum.textContent = 'Click the service selector to login';
-                    return;
-                }
-                
-                if (spotifyPlayer.isPlaying) {
-                    await spotifyPlayer.pause();
-                } else {
-                    await spotifyPlayer.play();
-                }
-                
-                // Immediately update UI
-                updateNowPlaying();
             }
             
             // Also refresh after a short delay to catch any state changes
@@ -308,13 +279,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 await state.independentPlayer.nextTrack();
-                
-            } else if (state.currentService === 'spotify') {
-                if (!state.spotifyEnabled) {
-                    console.log('Please login to Spotify first');
-                    return;
-                }
-                await spotifyPlayer.nextTrack();
             }
             
             await refreshPlaybackState();
@@ -339,13 +303,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 await state.independentPlayer.previousTrack();
-                
-            } else if (state.currentService === 'spotify') {
-                if (!state.spotifyEnabled) {
-                    console.log('Please login to Spotify first');
-                    return;
-                }
-                await spotifyPlayer.previousTrack();
             }
             
             await refreshPlaybackState();
