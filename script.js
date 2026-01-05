@@ -15,7 +15,7 @@ const state = {
     lightDimmer: 100,
     isPlaying: false,
     spotifyEnabled: false,
-    currentService: 'spotify',
+    currentService: 'independent',
     independentPlayer: null,
 };
 
@@ -376,6 +376,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ========================================
     
     setInterval(refreshPlaybackState, 3000);
+    
+    // ========================================
+    // INITIALIZE DEFAULT MUSIC SERVICE
+    // ========================================
+    
+    // Initialize Independent Artists as the default
+    if (!state.independentPlayer) {
+        state.independentPlayer = new IndependentMusicPlayer();
+        await state.independentPlayer.initialize();
+        const demoTracks = state.independentPlayer.getDemoTracks();
+        state.independentPlayer.setPlaylist(demoTracks);
+        console.log('Independent Music Player initialized on startup');
+        elements.songName.textContent = 'Ready to play';
+        elements.songAlbum.textContent = 'Independent Artists & Creative Commons';
+        
+        // Set the album art to the first track's artwork
+        if (demoTracks.length > 0) {
+            elements.songImage.src = demoTracks[0].artwork;
+        }
+    }
     
     // ========================================
     // SERVICE WORKER REGISTRATION
