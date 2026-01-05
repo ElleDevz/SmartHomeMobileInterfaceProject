@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Smart home control interface for managing lights, temperature, and music">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HomeHarmony">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" href="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <title>HomeHarmony - Smart Home Control</title>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title"><i class="fas fa-home"></i> HomeHarmony</h1>
+                <p class="app-subtitle">Smart Home Control</p>
+            </div>
+        </header>
+        
+        <main class="app-main">
+            <div class="cards-grid">
+                <!-- Lighting Control -->
+                <section class="control-card lighting-card" id="lighting">
+                    <div class="card-header">
+                        <i class="fas fa-lightbulb card-icon"></i>
+                        <h2>Lighting</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="lighting-controls">
+                            <div class="toggle-section">
+                                <label class="switch">
+                                    <input type="checkbox" id="toggleLights">
+                                    <span class="slider"></span>
+                                </label>
+                                <p class="status-text" id="lightingStatus">Off</p>
+                            </div>
+                            
+                            <div class="dimmer-section">
+                                <label for="lightDimmer">Brightness:</label>
+                                <input type="range" id="lightDimmer" class="dimmer-slider" min="0" max="100" value="100">
+                                <span class="dimmer-value" id="dimmerValue">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Temperature Control -->
+                <section class="control-card temperature-card" id="temperature">
+                    <div class="card-header">
+                        <i class="fas fa-thermometer-half card-icon"></i>
+                        <h2>Temperature</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="temperature-display" id="temperatureDisplay">78°F</div>
+                        <div class="temperature-buttons">
+                            <button class="btn-icon" id="decreaseTemp" aria-label="Decrease temperature">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button class="btn-icon" id="increaseTemp" aria-label="Increase temperature">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Music Control -->
+                <section class="control-card music-card" id="music">
+                    <div class="card-header">
+                        <i class="fas fa-music card-icon"></i>
+                        <h2>Music</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="song-display">
+                            <div class="song-image" id="songImage"></div>
+                            <div class="song-info">
+                                <div class="song-name" id="songName">Press Play to Get Groovy!</div>
+                                <div class="song-album" id="songAlbum">Select a service</div>
+                            </div>
+                        </div>
+                        
+                        <div class="music-service-selector-inline">
+                            <label for="musicServiceSelect">Music Service:</label>
+                            <select id="musicServiceSelect" class="music-service-select">
+                                <option value="spotify">Spotify</option>
+                                <option value="independent">Independent Artists</option>
+                            </select>
+                        </div>
+                        
+                        <div class="music-controls">
+                            <button class="btn-secondary" id="previousTrack" aria-label="Previous track">
+                                <i class="fas fa-backward"></i>
+                            </button>
+                            <button class="btn-primary" id="playPause">
+                                <i class="fas fa-play"></i>
+                                <span>Play</span>
+                            </button>
+                            <button class="btn-secondary" id="nextTrack" aria-label="Next track">
+                                <i class="fas fa-forward"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2024 HomeHarmony. All devices connected.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script src="independent-music-player.js"></script>
+</body>
+</html>

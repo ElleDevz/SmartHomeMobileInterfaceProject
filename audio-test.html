@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test - Ad Blocker Check</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            background: #0f172a;
+            color: #e0e7ff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background: rgba(51, 65, 85, 0.8);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        h1 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        
+        .test-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .status.success {
+            background: rgba(34, 197, 94, 0.2);
+            border-left: 4px solid #22c55e;
+        }
+        
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+        }
+        
+        .status.loading {
+            background: rgba(102, 126, 234, 0.2);
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Audio Playback Test</h1>
+        
+        <div class="test-section">
+            <h2>Test 1: Local Audio (No Risk)</h2>
+            <p>This creates a simple beep sound locally without downloading anything.</p>
+            <button onclick="testLocalAudio()">Play Local Beep</button>
+            <div id="status1" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Remote Audio (Mixkit)</h2>
+            <p>This tests if your browser can download and play audio from Mixkit (music site).</p>
+            <button onclick="testRemoteAudio()">Play Remote Audio</button>
+            <button onclick="stopAudio()">Stop</button>
+            <div id="status2" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Check Ad Blocker</h2>
+            <p>Let's see if an ad blocker is interfering with audio loading.</p>
+            <button onclick="checkAdBlocker()">Check Ad Blocker Status</button>
+            <div id="status3" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Recommendations:</h2>
+            <ul>
+                <li>✅ <strong>uBlock Origin</strong> - Best option, minimal blocking</li>
+                <li>⚠️ <strong>Adblock Plus</strong> - Can be aggressive, consider disabling</li>
+                <li>❌ <strong>Brave Browser</strong> - Blocks by default, may affect audio</li>
+                <li>💡 You can whitelist localhost:5173 in most ad blockers</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let audioElement = null;
+
+        function updateStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = `status ${type}`;
+        }
+
+        function testLocalAudio() {
+            try {
+                updateStatus('status1', 'Creating local audio...', 'loading');
+                
+                // Create a simple beep using Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                oscillator.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+                
+                updateStatus('status1', '✅ Local audio works! You can hear a beep.', 'success');
+            } catch (error) {
+                updateStatus('status1', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function testRemoteAudio() {
+            try {
+                updateStatus('status2', 'Loading remote audio from Mixkit...', 'loading');
+                
+                // Stop previous audio if playing
+                if (audioElement) {
+                    audioElement.pause();
+                    audioElement.src = '';
+                }
+                
+                audioElement = new Audio();
+                
+                audioElement.addEventListener('canplay', () => {
+                    updateStatus('status2', '✅ Audio loaded! Now playing...', 'success');
+                });
+                
+                audioElement.addEventListener('error', (e) => {
+                    updateStatus('status2', `❌ Failed to load audio. Ad blocker or network issue. Error: ${audioElement.error?.message || 'unknown'}`, 'error');
+                });
+                
+                audioElement.addEventListener('play', () => {
+                    updateStatus('status2', '🔊 Audio is playing!', 'success');
+                });
+                
+                audioElement.addEventListener('pause', () => {
+                    updateStatus('status2', '⏸️ Audio paused', 'loading');
+                });
+                
+                // Use a reliable Mixkit audio URL
+                audioElement.src = 'https://assets.mixkit.co/active_storage/sfx/2447/2447-preview.mp3';
+                audioElement.play();
+                
+            } catch (error) {
+                updateStatus('status2', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function stopAudio() {
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                updateStatus('status2', '⏹️ Audio stopped', 'loading');
+            }
+        }
+
+        function checkAdBlocker() {
+            try {
+                updateStatus('status3', 'Checking for ad blockers...', 'loading');
+                
+                // Try to load a known ad network script (won't execute)
+                const testImg = new Image();
+                let blocked = false;
+                
+                testImg.onerror = () => {
+                    blocked = true;
+                };
+                
+                // Use a timeout since some blockers just silently fail
+                setTimeout(() => {
+                    if (blocked) {
+                        updateStatus('status3', '⚠️ Ad blocker detected! It may be blocking audio from external sources. Try whitelisting localhost:5173', 'error');
+                    } else {
+                        updateStatus('status3', '✅ No obvious ad blocker detected. Issue may be elsewhere.', 'success');
+                    }
+                }, 2000);
+                
+                testImg.src = 'https://googleads.g.doubleclick.net/pagead/viewthroughconversion/';
+                
+            } catch (error) {
+                updateStatus('status3', `Error checking: ${error.message}`, 'error');
+            }
+        }
+
+        // Run initial checks when page loads
+        window.addEventListener('load', () => {
+            console.log('Audio Test Page Loaded');
+            console.log('Browser:', navigator.userAgent);
+        });
+    </script>
+</body>
+</html>
